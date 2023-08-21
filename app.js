@@ -33,16 +33,17 @@ const reviewRoutes = require('./routes/reviews');
 
 const MongoStore = require('connect-mongo');
 
-const dbUrl = process.env.DB_URL;
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
 
-// const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp;'
+// const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';
 
 
 // 'mongodb://127.0.0.1:27017/yelp-camp'
+
 mongoose.connect(dbUrl, {
     useNewUrlParser: true,
     // useCreateIndex: true, ova ne mora vekje vo ovaa verzija
-    useUnifiedTopology: true,
+    useUnifiedTopology: true
 
 });
 
@@ -63,11 +64,13 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
 
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
     crypto: {
-        secret: 'thisshouldbeabettersecret!'
+        secret
     }
 });
 
@@ -78,7 +81,7 @@ store.on("error", function (e) {
 const sessionConfig = {
     store,
     name: "session",
-    secret: 'thisshouldbeabettersecret!',
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -140,14 +143,12 @@ app.use(
 
 
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); 
 passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser(User.serializeUser());
+passport.serializeUser(User.serializeUser()); 
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-    console.log(req.query);
     res.locals.currentUser = req.user;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
