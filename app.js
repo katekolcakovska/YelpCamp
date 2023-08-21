@@ -99,6 +99,7 @@ const scriptSrcUrls = [
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
 ];
+//This is the array that needs added to
 const styleSrcUrls = [
     "https://kit-free.fontawesome.com/",
     "https://api.mapbox.com/",
@@ -127,7 +128,7 @@ app.use(
                 "'self'",
                 "blob:",
                 "data:",
-                "https://res.cloudinary.com/dljsi5rdk/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
+                "https://res.cloudinary.com/YOURACCOUNT/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT! 
                 "https://images.unsplash.com/",
             ],
             fontSrc: ["'self'", ...fontSrcUrls],
